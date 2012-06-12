@@ -35,16 +35,21 @@
 			* @param {Object} item The selected item.
 			*/
 			function setSuggestItem(item) {
-				input.val(item.text);
-				results.html('').hide();
 
-				if (typeof settings.onSelect === 'function') {
-					settings.onSelect(item);
-				}
+				return function () {
 
-				if (settings.autoSubmit) {
-					input.closest('form').submit();
-				}
+					input.val(item.text);
+					results.html('').hide();
+
+					if (typeof settings.onSelect === 'function') {
+						settings.onSelect(item);
+					}
+
+					if (settings.autoSubmit) {
+						input.closest('form').submit();
+					}
+
+				};
 			}
 
 			/**
@@ -53,15 +58,18 @@
 			* @method setHoverClass
 			* @param {Object} item The hovered item.
 			*/
-			function setHoverClass(item) {
+			function setHoverState(item) {
 
-				results.find('li').removeClass(settings.cssClasses.hover);
+				return function () {
+					results.find('li').removeClass(settings.cssClasses.hover);
 
-				if (item) {
-					item.addClass(settings.cssClasses.hover);
-				}
+					if (item) {
+						input.val(item.text());
+						item.addClass(settings.cssClasses.hover);
+					}
 
-				selectedItem = item;
+					selectedItem = item;
+				};
 			}
 
 			/**
@@ -88,7 +96,9 @@
 
 					item.append(text)
 						.click(setSuggestItem(resultArray[i]))
-						.mouseover(setHoverClass(item));
+						.mouseover(setHoverState(item));
+
+
 
 					results.append(item);
 				}
@@ -130,12 +140,12 @@
 			}
 
 			/**
-			* Bind actions to keys pressed in the input box.
+			* Bind actions to key up events in the input box.
 			*
-			* @method bindKeys
+			* @method keyBindings
 			* @param {Object} e The jQuery event object.
 			*/
-			function bindKeys(e) {
+			function keyBindings(e) {
 
 				switch (e.keyCode) {
 
@@ -145,21 +155,22 @@
 
 					case 40: // down
 						if (selectedItem === undef) {
-							setHoverClass(results.find('li:first').eq(0));
+							setHoverState(results.find('li:first').eq(0))();
 						} else {
 							if (selectedItem[0] !== results.find('li:last')[0]) {
-								setHoverClass(selectedItem.next().eq(0));
+								setHoverState(selectedItem.next().eq(0))();
 							}
 						}
 
 						return false;
 
 					case 38: // up
+
 						if (selectedItem === undef) {
-							setHoverClass(results.find('li:last').eq(0));
+							setHoverState(results.find('li:last').eq(0))();
 						} else {
 							if (selectedItem[0] !== results.find('li:first')[0]) {
-								setHoverClass(selectedItem.prev().eq(0));
+								setHoverState(selectedItem.prev().eq(0))();
 							}
 						}
 
@@ -177,7 +188,7 @@
 				.attr('autocomplete', 'off')
 				.addClass(uniqueClass)
 				.after(results)
-				.keyup(bindKeys)
+				.keyup(keyBindings)
 				.focus(function () {
 
 					if (input.val().length) {
@@ -198,4 +209,4 @@
 		});
 	};
 
-}(jQuery));
+} (jQuery));
