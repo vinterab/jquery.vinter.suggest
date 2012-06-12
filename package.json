@@ -1,0 +1,25 @@
+{
+  "name": "jquery.vinter.suggest",
+  "title": "jquery.vinter.suggest",
+  "description": "A simple and lightweight jquery plugin for input suggestions",
+  "version": "1.0.0",
+  "homepage": "https://github.com/vinterab/jquery.vinter.suggest/",
+  "author": {
+    "name": "Vinter AB",
+    "url": "http://www.vinterwebb.se"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vinterab/jquery.vinter.suggest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vinterab/jquery.vinter.suggest/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/vinterab/jquery.vinter.suggest/blob/master/LICENSE-MIT"
+    }
+  ],
+  "keywords": ["jquery suggest autocomplete"]
+}
