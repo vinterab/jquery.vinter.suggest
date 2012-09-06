@@ -1,4 +1,4 @@
-/*! jquery.vinter.suggest - v1.0.0 - 2012-06-12
+/*! jquery.vinter.suggest - v1.0.0 - 2012-09-06
 * https://github.com/vinterab/jquery.vinter.suggest/
 * Copyright (c) 2012 Vinter AB; Licensed MIT */
 
@@ -12,10 +12,15 @@
 				focus: 's-focus',
 				suggestResult: 'suggest'
 			},
+			queryParam: 'q',
+			dataType: 'json',
 			minCharacters: 1,
 			highlightMatches: true,
 			onSelect: undef,
-			autoSubmit: true
+			autoSubmit: true,
+			parseResponse: function (data, query, cb) {
+				cb(data, query);
+			}
 		},
 		jsonTimeout, index = 0;
 
@@ -127,14 +132,18 @@
 					clearTimeout(jsonTimeout);
 
 					jsonTimeout = setTimeout(function () {
-						$.getJSON(settings.url, { q: query }, function (data) {
+						var params = {};
+
+						params[settings.queryParam] = query;
+
+						$.get(settings.url, params, function (data) {
 							if (data) {
-								renderSuggestions(data, query);
+								settings.parseResponse(data, query, renderSuggestions);
 							}
 							else {
 								results.html('').hide();
 							}
-						});
+						}, settings.dataType);
 					}, 300);
 				}
 			}
@@ -209,4 +218,4 @@
 		});
 	};
 
-} (jQuery));
+}(jQuery));
