@@ -10,6 +10,7 @@
 			cssClasses: {
 				hover: 's-hover',
 				focus: 's-focus',
+				closing: 's-closing',
 				suggestResult: 'suggest'
 			},
 			queryParam: 'q',
@@ -206,8 +207,10 @@
 
 					$(document).on('click.suggest', function (e) {
 						if (!$(e.target).hasClass(uniqueClass)) {
+							results.addClass(settings.cssClasses.closing);
 							results.slideUp(150, function () {
 								input.removeClass(settings.cssClasses.focus);
+								results.removeClass(settings.cssClasses.closing);
 							});
 							$(document).off('click.suggest');
 						}
